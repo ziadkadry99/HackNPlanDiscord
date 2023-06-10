@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   console.log(req.body)
   body = req.body
@@ -18,7 +18,7 @@ app.post('/', (req, res) => {
     case 'workitem.user.unassigned':
       break
     case 'workitem.comment.created':
-      axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
+      await axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
       .then(function (response) {
         res.send(res)
       })
