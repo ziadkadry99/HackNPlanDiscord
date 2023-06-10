@@ -23,28 +23,32 @@ app.post('/', async (req, res) => {
       break
 
     case 'workitem.updated':
+      let assignedUsernames = ''
+      body['AssugnedUsers'].forEach(async user => {
+        assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
+      });
       let stage = 'Unknown'
       let color = 15258703
       switch (body['Stage']['StageId']) {
         case 1:
-          stage = 'Planned'
+          stage = 'Planned🗓️'
           color = 9807270
           break
         case 2:
-          stage = 'In Progress'
+          stage = 'In Progress🧑‍💻'
           color = 3447003
           break
         case 3:
-          stage = 'Testing'
+          stage = 'Testing🕹️'
           color = 15548997
           break
         case 4:
-          stage = 'Completed'
+          stage = 'Completed🥳'
           color = 5763719
           break
       }
       const messageText = `Task moved to stage: ${stage}`
-      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${body['Title']}`, `Task ${stage}`, messageText, username, color))
+      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
@@ -142,7 +146,7 @@ function CreateMessage(taskTitle, change, value, user, color) {
             "value": user
           },
           {
-            "name": "Value",
+            "name": "Notification",
             "value": value
           }
         ]
