@@ -5,7 +5,7 @@ const app = express()
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   body = req.body
   switch(eventType) {
