@@ -1,14 +1,17 @@
 const axios = require('axios')
 const express = require('express')
+const bodyParser = require('body-parser');
 
 const app = express()
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 app.post('/', (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
-  console.log(req.content)
-  body = req.content
+  console.log(req.body)
+  body = req.body
   switch(eventType) {
     case 'workitem.user.assigned': 
       break
