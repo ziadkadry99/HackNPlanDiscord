@@ -25,21 +25,22 @@ app.post('/', async (req, res) => {
     case 'workitem.updated':
       let assignedUsernames = ''
       body['AssignedUsers'].forEach(async user => {
+        console.log(body)
         assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
       });
       let stage = 'Unknown'
       let color = 15258703
       switch (body['Stage']['StageId']) {
         case 1:
-          stage = 'Planned🗓️'
+          stage = 'Planned 🗓️'
           color = 9807270
           break
         case 2:
-          stage = 'In Progress🧑‍💻'
+          stage = 'In Progress 🧑‍💻'
           color = 3447003
           break
         case 3:
-          stage = 'Testing🕹️'
+          stage = 'Testing 🕹️'
           color = 15548997
           break
         case 4:
@@ -49,15 +50,15 @@ app.post('/', async (req, res) => {
       }
       const messageText = `Task moved to stage: ${stage}`
       discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
-      await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
-      .then(function (response) {
-        console.log('DISCORD RESPONSE: ' + response)
-        res.send('')
-      })
-      .catch(function (error) {
-        console.log('ERROR: ' + error)
-        res.send('')
-      });
+      // await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
+      // .then(function (response) {
+      //   console.log('DISCORD RESPONSE: ' + response)
+      //   res.send('')
+      // })
+      // .catch(function (error) {
+      //   console.log('ERROR: ' + error)
+      //   res.send('')
+      // });
       break
     case 'workitem.comment.created':
       const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
