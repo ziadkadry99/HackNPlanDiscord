@@ -51,6 +51,7 @@ app.post('/', async (req, res) => {
       }
       const messageText = `Task moved to stage: ${stage}`
       discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
+      console.log(discordMessageBody)
       // await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       // .then(function (response) {
       //   console.log('DISCORD RESPONSE: ' + response)
