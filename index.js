@@ -24,7 +24,7 @@ app.post('/', async (req, res) => {
 
     case 'workitem.updated':
       let assignedUsernames = ''
-      body['AssugnedUsers'].forEach(async user => {
+      body['AssignedUsers'].forEach(async user => {
         assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
       });
       let stage = 'Unknown'
