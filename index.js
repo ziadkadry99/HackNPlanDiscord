@@ -49,7 +49,7 @@ app.post('/', async (req, res) => {
           break
       }
       const messageText = `Task moved to stage: ${stage}`
-      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
+      discordMessageBody = JSON.stringify(CreateMessage(body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
@@ -62,7 +62,7 @@ app.post('/', async (req, res) => {
       break
     case 'workitem.comment.created':
       const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
-      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
+      discordMessageBody = JSON.stringify(CreateMessage(body['WorkItemId'], `${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
       console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
@@ -121,7 +121,7 @@ function GetImageFromText(text) {
   return images.length > 0 ? images[0][0] : ''
 }
 
-function CreateMessage(taskTitle, change, value, user, color) {
+function CreateMessage(taskId, taskTitle, change, value, user, color) {
   return {
     "username": "HackNPlan Bot",
     "avatar_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png",
@@ -133,8 +133,8 @@ function CreateMessage(taskTitle, change, value, user, color) {
           "url": "https://app.hacknplan.com/p/179190",
           "icon_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png"
         },
-        "title": "HackNPlan Notification",
-        "url": "https://app.hacknplan.com/p/179190",
+        "title": `#${taskId}`,
+        "url": `https://app.hacknplan.com/p/179190&taskId=${taskId}`,
         "description": "",
         "color": color,
         "fields": [
