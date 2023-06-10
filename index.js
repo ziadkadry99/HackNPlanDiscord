@@ -126,7 +126,7 @@ function CreateMessage(taskTitle, change, value, user, color) {
           "url": "https://app.hacknplan.com/p/179190",
           "icon_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png"
         },
-        "title": "Test",
+        "title": "HackNPlan Notification",
         "url": "https://app.hacknplan.com/p/179190",
         "description": "",
         "color": color,
