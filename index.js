@@ -18,7 +18,9 @@ app.post('/', async (req, res) => {
     case 'workitem.user.unassigned':
       break
     case 'workitem.comment.created':
-      await axios.post(DISCORD_WEBHOOK_URL, JSON.stringify(CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username'])))
+      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
+      console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
+      await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
         res.send('')
