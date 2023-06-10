@@ -14,7 +14,7 @@ app.post('/', (req, res) => {
     case 'workitem.user.unassigned':
       break
     case 'workitem.comment.created':
-      axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body[WorkItemId]}`, 'Comment Added', body['Text'], body['User']['Username']))
+      axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
       .then(function (response) {
         res.send(res)
       })
