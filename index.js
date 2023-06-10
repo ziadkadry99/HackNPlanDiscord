@@ -20,10 +20,12 @@ app.post('/', async (req, res) => {
     case 'workitem.comment.created':
       await axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
       .then(function (response) {
-        res.send(res)
+        console.log(res)
+        res.send('')
       })
       .catch(function (error) {
-        res.send(res)
+        console.log(res)
+        res.send('')
       });
       break
   }
