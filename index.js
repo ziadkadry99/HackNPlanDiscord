@@ -15,6 +15,7 @@ const MAIN_PROJECT_ID = '179190'
 app.post('/', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   body = req.body
+
   const username = await GetUsername(body['ProjectId'], body['User']['Id'])
   switch(eventType) {
     case 'workitem.user.assigned': 
@@ -114,6 +115,12 @@ async function GetWorkItemTitle(projectId, workItemId) {
   return workItemTitle
 }
 
+function GetImageFromText(text) { 
+  regex = 'https?:/(/[^/]+)+\.(?:jpg|gif|png)'
+  const images = [...text.matchAll(regex)]
+  return images.length > 0 ? images[0][0] : ''
+}
+
 function CreateMessage(taskTitle, change, value, user, color) {
   return {
     "username": "HackNPlan Bot",
@@ -149,7 +156,10 @@ function CreateMessage(taskTitle, change, value, user, color) {
             "name": "Notification",
             "value": value
           }
-        ]
+        ],
+        "image": {
+          "url": GetImageFromText(value)
+        }
       }
     ]
   }
