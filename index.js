@@ -6,7 +6,7 @@ const PORT = 3000;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 app.get('/', (req, res) => {
-  eventType = req.headers['x-hacknplan-event']
+  eventType = req.headers['x-hacknplan-event'] 
   body = req.body
   switch(eventType) {
     case 'workitem.user.assigned': 
@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${port}`)
+  
 })
 
 function CreateMessage(taskTitle, change, value, user) {
