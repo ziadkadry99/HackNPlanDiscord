@@ -8,10 +8,12 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
+const HACKNPLAN_BASE_URL = 'https://api.hacknplan.com/v0'
+const HACKNPLAN_API_KEY = process.env.HACKNPLAN_API_KEY
+const MAIN_PROJECT_ID = '179190'
 
 app.post('/', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
-  console.log(req.body)
   body = req.body
   switch(eventType) {
     case 'workitem.user.assigned': 
@@ -19,7 +21,9 @@ app.post('/', async (req, res) => {
     case 'workitem.user.unassigned':
       break
     case 'workitem.comment.created':
-      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Id']))
+      const username = await GetUsername(body['ProjectId'], body['User']['Id'])
+      const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
+      discordMessageBody = JSON.stringify(CreateMessage(`#${body['WorkItemId']} ${workItemTitle}`, 'Comment Added', body['Text'], username))
       console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
@@ -32,12 +36,45 @@ app.post('/', async (req, res) => {
       });
       break
   }
-  res.send('Hello World!')
+  
 })
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
+
+async function GetUsername(projectId, userId) {
+  const config = {
+    headers: {
+      Authorization: `ApiKey ${HACKNPLAN_API_KEY}`
+    }
+  }
+  let username = 'Unknown'
+  await axios.get(`${HACKNPLAN_BASE_URL}/projects/${projectId}/users`, config).then(res => {
+    
+    res.data.forEach(user => {
+     if(user['user']['id'] == userId) {
+      username = user['user']['username']
+     } 
+    });
+  })
+
+  return username
+}
+
+async function GetWorkItemTitle(projectId, workItemId) {
+  const config = {
+    headers: {
+      Authorization: `ApiKey ${HACKNPLAN_API_KEY}`
+    }
+  }
+  let workItemTitle = 'Unknown'
+  await axios.get(`${HACKNPLAN_BASE_URL}/projects/${projectId}/workitems/${workItemId}`, config).then(res => {
+    workItemTitle = res.data['title']
+  })
+
+  return workItemTitle
+}
 
 function CreateMessage(taskTitle, change, value, user) {
   return {
@@ -49,7 +86,7 @@ function CreateMessage(taskTitle, change, value, user) {
         "author": {
           "name": "HackNPlan Bot",
           "url": "https://app.hacknplan.com/p/179190",
-          "icon_url": "https://i.imgur.com/R66g1Pe.jpg"
+          "icon_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png"
         },
         "title": "Test",
         "url": "https://app.hacknplan.com/p/179190",
