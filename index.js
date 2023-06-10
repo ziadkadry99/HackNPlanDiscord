@@ -24,11 +24,16 @@ app.post('/', async (req, res) => {
 
     case 'workitem.updated':
       let assignedUsernames = ''
-      await body['AssignedUsers'].forEach(async user => {
+      await Promise.all(body['AssignedUsers'].map(async (user) => {
         console.log(user['ProjectId'], user['User']['Id'])
         console.log(await GetUsername(user['ProjectId'], user['User']['Id']) + ' ')
         assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
-      });
+      }))
+      // await body['AssignedUsers'].forEach(async user => {
+      //   console.log(user['ProjectId'], user['User']['Id'])
+      //   console.log(await GetUsername(user['ProjectId'], user['User']['Id']) + ' ')
+      //   assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
+      // });
       let stage = 'Unknown'
       let color = 15258703
       switch (body['Stage']['StageId']) {
