@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express()
 app.use(bodyParser.json());
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
