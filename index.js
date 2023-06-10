@@ -2,7 +2,7 @@ const axios = require('axios')
 const express = require('express')
 
 const app = express()
-const PORT = 3000;
+const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 app.get('/', (req, res) => {
@@ -27,8 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${port}`)
-
+  console.log(`Example app listening on port ${PORT}`)
 })
 
 function CreateMessage(taskTitle, change, value, user) {
