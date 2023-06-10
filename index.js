@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 
 const app = express()
-app.use(bodyParser);
+app.use(bodyParser.json());
 
 const PORT = process.env.PORT;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
