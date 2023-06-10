@@ -7,8 +7,8 @@ const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL
 
 app.post('/', (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
-  console.log(req)
-  body = req.body
+  console.log(req.content)
+  body = req.content
   switch(eventType) {
     case 'workitem.user.assigned': 
       break
