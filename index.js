@@ -18,7 +18,7 @@ app.post('/', async (req, res) => {
     case 'workitem.user.unassigned':
       break
     case 'workitem.comment.created':
-      await axios.post(DISCORD_WEBHOOK_URL, CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username']))
+      await axios.post(DISCORD_WEBHOOK_URL, JSON.stringify(CreateMessage(`#${body['WorkItemId']}`, 'Comment Added', body['Text'], body['User']['Username'])))
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
         res.send('')
@@ -38,8 +38,8 @@ app.listen(PORT, () => {
 
 function CreateMessage(taskTitle, change, value, user) {
   return {
-    username: "HackNPlan Bot",
-    avatar_url: "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png",
+    "username": "HackNPlan Bot",
+    "avatar_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png",
     "content": "",
     "embeds": [
       {
