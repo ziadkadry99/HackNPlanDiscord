@@ -62,7 +62,7 @@ app.post('/', async (req, res) => {
       break
     case 'workitem.comment.created':
       const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
-      const firstBoardId = await GetFirstBoard(bodu['ProjectId'])
+      const firstBoardId = await GetFirstBoard(body['ProjectId'])
       discordMessageBody = JSON.stringify(CreateMessage(body['ProjectId'], firstBoardId, body['WorkItemId'], `${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
       console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
