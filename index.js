@@ -49,7 +49,7 @@ app.post('/', async (req, res) => {
           break
       }
       const messageText = `Task moved to stage: ${stage}`
-      discordMessageBody = JSON.stringify(CreateMessage(body['projectId'], body['Board']['BoardId'], body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
+      discordMessageBody = JSON.stringify(CreateMessage(body['ProjectId'], body['Board']['BoardId'], body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
@@ -122,7 +122,7 @@ function GetImageFromText(text) {
   return images.length > 0 ? images[0][0] : ''
 }
 
-async function GetFirstBoard() {
+async function GetFirstBoard(projectId) {
   const config = {
     headers: {
       Authorization: `ApiKey ${HACKNPLAN_API_KEY}`
