@@ -49,7 +49,7 @@ app.post('/', async (req, res) => {
           break
       }
       const messageText = `Task moved to stage: ${stage}`
-      discordMessageBody = JSON.stringify(CreateMessage(body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
+      discordMessageBody = JSON.stringify(CreateMessage(body['Board']['BoardId'], body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
@@ -62,7 +62,8 @@ app.post('/', async (req, res) => {
       break
     case 'workitem.comment.created':
       const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
-      discordMessageBody = JSON.stringify(CreateMessage(body['WorkItemId'], `${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
+      const firstBoardId = await GetFirstBoard(bodu['ProjectId'])
+      discordMessageBody = JSON.stringify(CreateMessage(firstBoardId, body['WorkItemId'], `${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
       console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
@@ -121,7 +122,22 @@ function GetImageFromText(text) {
   return images.length > 0 ? images[0][0] : ''
 }
 
-function CreateMessage(taskId, taskTitle, change, value, user, color) {
+async function GetFirstBoard() {
+  const config = {
+    headers: {
+      Authorization: `ApiKey ${HACKNPLAN_API_KEY}`
+    }
+  }
+  let boardId = 'Unknown'
+  await axios.get(`${HACKNPLAN_BASE_URL}/projects/${projectId}/boards`, config).then(res => {
+    boardId = res.data[0]['boardId']
+  })
+
+  return boardId
+
+}
+
+function CreateMessage(boardId, taskId, taskTitle, change, value, user, color) {
   return {
     "username": "HackNPlan Bot",
     "avatar_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png",
@@ -134,7 +150,7 @@ function CreateMessage(taskId, taskTitle, change, value, user, color) {
           "icon_url": "https://hacknplan.com/wp-content/uploads/2016/05/icon_web.png"
         },
         "title": `#${taskId}`,
-        "url": `https://app.hacknplan.com/p/179190&taskId=${taskId}`,
+        "url": `https://app.hacknplan.com/p/179190$boardId=${boardId}&taskId=${taskId}`,
         "description": "",
         "color": color,
         "fields": [
