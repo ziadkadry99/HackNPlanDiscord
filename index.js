@@ -28,6 +28,12 @@ app.post('/', async (req, res) => {
       await Promise.all(body['AssignedUsers'].map(async (user) => {
         assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
       }))
+
+      if(body['Stage']['StageId'] == 1 || body['Stage']['StageId'] == 2) {
+        res.send('')
+        return
+      }
+
       let stage = 'Unknown'
       let color = 15258703
       switch (body['Stage']['StageId']) {
@@ -48,6 +54,7 @@ app.post('/', async (req, res) => {
           color = 5763719
           break
       }
+
       const messageText = `Task moved to stage: ${stage}`
       discordMessageBody = JSON.stringify(CreateMessage(body['ProjectId'], body['Board']['BoardId'], body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
