@@ -124,7 +124,7 @@ async function GetWorkItemTitle(projectId, workItemId) {
 }
 
 function GetImageFromText(text) { 
-  regex = 'https?:/(/[^/]+)+\.(?:jpg|gif|png)'
+  regex = 'https?:/(/[^/]+)+\.(?:jpg|gif|png|JPG|GIF|PNG)(\S*)?'
   const images = [...text.matchAll(regex)]
   return images.length > 0 ? images[0][0] : ''
 }
