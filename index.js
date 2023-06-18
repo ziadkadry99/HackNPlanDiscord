@@ -30,7 +30,7 @@ app.post('/', async (req, res) => {
       }))
 
       if(body['Stage']['StageId'] == 1 || body['Stage']['StageId'] == 2) {
-        res.send('')
+        res.send(new Date(Date.now()).toUTCString())
         return
       }
 
