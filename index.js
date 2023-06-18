@@ -60,11 +60,11 @@ app.post('/', async (req, res) => {
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
-        res.send(new Date(Date.now()).toUTCString)
+        res.send(new Date(Date.now()).toUTCString())
       })
       .catch(function (error) {
         console.log('ERROR: ' + error)
-        res.send(new Date(Date.now()).toUTCString)
+        res.send(new Date(Date.now()).toUTCString())
       });
       break
     case 'workitem.comment.created':
@@ -75,15 +75,15 @@ app.post('/', async (req, res) => {
       await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
       .then(function (response) {
         console.log('DISCORD RESPONSE: ' + response)
-       res.send(new Date(Date.now()).toUTCString)
+       res.send(new Date(Date.now()).toUTCString())
       })
       .catch(function (error) {
         console.log('ERROR: ' + error)
-         res.send(new Date(Date.now()).toUTCString)
+         res.send(new Date(Date.now()).toUTCString())
       });
       break
   }
-  res.send(new Date(Date.now()).toUTCString)
+  res.send(new Date(Date.now()).toUTCString())
 })
 
 app.listen(PORT, () => {
