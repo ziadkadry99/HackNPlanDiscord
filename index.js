@@ -82,8 +82,10 @@ app.post('/', async (req, res) => {
          res.send(new Date(Date.now()).toUTCString())
       });
       break
+    default:
+      res.send(new Date(Date.now()).toUTCString())
+      break
   }
-  res.send(new Date(Date.now()).toUTCString())
 })
 
 app.listen(PORT, () => {
