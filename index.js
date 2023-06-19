@@ -23,7 +23,7 @@ app.post('/', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   body = req.body
 
-  console.log(`Recieved message of type ${eventType} at ${new Date(Date.now()).toUTCString()} with body: ${body}`)
+  console.log(`Recieved message of type ${eventType} at ${new Date(Date.now()).toUTCString()} with body: ${JSON.stringify(body)}`)
 
   const username = await GetUsername(body['ProjectId'], body['User']['Id'])
   switch(eventType) {
@@ -101,7 +101,7 @@ app.post('/update', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   body = req.body
 
-  console.log(`Recieved message of type ${eventType} at ${new Date(Date.now()).toUTCString()} with body: ${body}`)
+  console.log(`Recieved message of type ${eventType} at ${new Date(Date.now()).toUTCString()} with body: ${JSON.stringify(body)}`)
 
   const username = await GetUsername(body['ProjectId'], body['User']['Id'])
   switch(eventType) {
