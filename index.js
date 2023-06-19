@@ -97,7 +97,7 @@ app.post('/', async (req, res) => {
   }
 })
 
-app.post('/', async (req, res) => {
+app.post('/update', async (req, res) => {
   eventType = req.headers['x-hacknplan-event'] 
   body = req.body
 
