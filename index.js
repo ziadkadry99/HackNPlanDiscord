@@ -1,16 +1,9 @@
 const axios = require('axios')
 const express = require('express')
 const bodyParser = require('body-parser');
-const rateLimit = require("express-rate-limit");
 
 
 const app = express()
-app.use(bodyParser.json());
-const limiter = rateLimit({  
-  windowMs: 1000, // 5 seconds
-  max: 1 // limit each IP to 1 request per windowMs
-});
-app.use(limiter);
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
