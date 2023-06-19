@@ -27,55 +27,6 @@ app.post('/', async (req, res) => {
 
   const username = await GetUsername(body['ProjectId'], body['User']['Id'])
   switch(eventType) {
-    case 'workitem.user.assigned': 
-      break
-    case 'workitem.user.unassigned':
-      break
-
-    case 'workitem.updated':
-      let assignedUsernames = ''
-      await Promise.all(body['AssignedUsers'].map(async (user) => {
-        assignedUsernames += await GetUsername(user['ProjectId'], user['User']['Id']) + ' '
-      }))
-
-      if(body['Stage']['StageId'] == 1 || body['Stage']['StageId'] == 2) {
-        res.send(new Date(Date.now()).toUTCString())
-        return
-      }
-
-      let stage = 'Unknown'
-      let color = 15258703
-      switch (body['Stage']['StageId']) {
-        case 1:
-          stage = 'Planned 🗓️'
-          color = 9807270
-          break
-        case 2:
-          stage = 'In Progress 🧑‍💻'
-          color = 3447003
-          break
-        case 3:
-          stage = 'Testing 🕹️'
-          color = 15548997
-          break
-        case 4:
-          stage = 'Completed🥳'
-          color = 5763719
-          break
-      }
-
-      const messageText = `Task moved to stage: ${stage}`
-      discordMessageBody = JSON.stringify(CreateMessage(body['ProjectId'], body['Board']['BoardId'], body['WorkItemId'], `${body['Title']}`, `Task ${stage}`, messageText, assignedUsernames, color))
-      await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
-      .then(function (response) {
-        console.log('DISCORD RESPONSE: ' + response)
-        res.send(new Date(Date.now()).toUTCString())
-      })
-      .catch(function (error) {
-        console.log('ERROR: ' + error)
-        res.send(new Date(Date.now()).toUTCString())
-      });
-      break
     case 'workitem.comment.created':
       const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
       const firstBoardId = await GetFirstBoard(body['ProjectId'])
@@ -105,11 +56,6 @@ app.post('/update', async (req, res) => {
 
   const username = await GetUsername(body['ProjectId'], body['User']['Id'])
   switch(eventType) {
-    case 'workitem.user.assigned': 
-      break
-    case 'workitem.user.unassigned':
-      break
-
     case 'workitem.updated':
       let assignedUsernames = ''
       await Promise.all(body['AssignedUsers'].map(async (user) => {
@@ -152,21 +98,6 @@ app.post('/update', async (req, res) => {
       .catch(function (error) {
         console.log('ERROR: ' + error)
         res.send(new Date(Date.now()).toUTCString())
-      });
-      break
-    case 'workitem.comment.created':
-      const workItemTitle = await GetWorkItemTitle(body['ProjectId'], body['WorkItemId'])
-      const firstBoardId = await GetFirstBoard(body['ProjectId'])
-      discordMessageBody = JSON.stringify(CreateMessage(body['ProjectId'], firstBoardId, body['WorkItemId'], `${workItemTitle}`, 'Comment Added', body['Text'], username, 15258703))
-      console.log('DISCORD MESSAGE BODY: ' + discordMessageBody)
-      await axios.post(DISCORD_WEBHOOK_URL, discordMessageBody)
-      .then(function (response) {
-        console.log('DISCORD RESPONSE: ' + response)
-       res.send(new Date(Date.now()).toUTCString())
-      })
-      .catch(function (error) {
-        console.log('ERROR: ' + error)
-         res.send(new Date(Date.now()).toUTCString())
       });
       break
     default:
